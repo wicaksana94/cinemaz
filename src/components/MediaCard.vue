@@ -50,7 +50,7 @@
     <div class="flex h-[88px] flex-col gap-1 p-3">
       <RouterLink
         :to="`/${item.mediaType}/${item.id}`"
-        class="text-sm font-semibold text-[var(--color-text-primary)] line-clamp-1 hover:text-[var(--color-accent)] transition-colors leading-tight overflow-hidden text-ellipsis whitespace-nowrap"
+        class="block text-sm font-semibold text-[var(--color-text-primary)] line-clamp-1 hover:text-[var(--color-accent)] transition-colors leading-tight overflow-hidden text-ellipsis whitespace-nowrap"
         :title="item.title"
       >
         {{ item.title }}
