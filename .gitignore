@@ -1,0 +1,33 @@
+node_modules
+dist
+dist-ssr
+*.local
+.freebuff/
+docs/
+
+# Environment secrets
+.env
+.env.local
+.env.*.local
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Logs
+*.log
+npm-debug.log*
+
+# Coverage
+coverage
+.vercel
+
+# Build artifacts
+tsconfig.*.tsbuildinfo
