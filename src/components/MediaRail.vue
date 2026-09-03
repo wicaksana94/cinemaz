@@ -69,7 +69,7 @@
     <!-- Scrollable cards -->
     <div
       v-else
-      class="relative group/rail"
+      class="relative group/rail border border-[var(--color-border-subtle)] rounded-lg"
     >
       <!-- Prev button -->
       <button
