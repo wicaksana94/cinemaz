@@ -2,6 +2,11 @@
   command = "npm run build"
   publish = "dist"
 
+[[plugins]]
+  package = "@netlify/plugin-lighthouse"
+  [plugins.inputs]
+    audits = []
+
 [[redirects]]
   from = "/api/tmdb/*"
   to = "/.netlify/edge-functions/tmdb-gateway/:splat"
