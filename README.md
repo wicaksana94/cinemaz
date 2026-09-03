@@ -28,7 +28,7 @@ cinemaZ is a Vue 3 web application for browsing movies and TV shows using data f
 
 ```bash
 # 1. Clone the repository
-git clone <repository-url>
+git clone https://github.com/wicaksana94/cinemaz.git
 cd cinemaz
 
 # 2. Install dependencies
@@ -101,8 +101,10 @@ cinemaz/
 │   │   ├── HeroSection.vue   # Decorative backdrop hero with CTA
 │   │   ├── MediaCard.vue     # Individual media card with poster + action
 │   │   ├── MediaRail.vue     # Horizontal scrollable rail with infinite scroll
+│   │   ├── PaginationBar.vue # Numbered pagination with page numbers + ellipsis
 │   │   ├── PersonCard.vue    # Person card with profile photo + popularity
-│   │   └── PersonRail.vue    # Horizontal scrollable person rail
+│   │   ├── PersonRail.vue    # Horizontal scrollable person rail
+│   │   └── SearchModeToggle.vue # Toggle between paged and infinite scroll
 │   ├── lib/
 │   │   ├── tmdb/
 │   │   │   ├── client.ts     # Typed TMDB client + query definitions
@@ -110,13 +112,14 @@ cinemaz/
 │   │   │   ├── images.ts     # Image URL helper with slot sizes
 │   │   │   ├── keys.ts       # Query key factory
 │   │   │   ├── mappers.ts    # TMDB → domain type mappers
-│   │   │   └── schemas.ts    # Zod schemas + domain types
+│   │   │   ├── schemas.ts    # Zod schemas + domain types
+│   │   │   └── useMediaQueries.ts # Vue composables for queries + search
 │   │   └── watchlist/
 │   │       ├── storage.ts    # localStorage adapter with validation
 │   │       └── useWatchlist.ts # Vue composable for reactive watchlist
 │   ├── views/
 │   │   ├── HomeView.vue      # Hero + 9 catalog rails
-│   │   ├── SearchView.vue    # Debounced search with URL sync
+│   │   ├── SearchView.vue    # Search with toggle pagination/infinite scroll
 │   │   ├── DetailView.vue    # Movie/TV detail with metadata
 │   │   ├── WatchlistView.vue  # Saved titles with remove
 │   │   └── NotFoundView.vue  # 404 recovery page
@@ -140,6 +143,8 @@ cinemaz/
 4. **Watchlist via localStorage** — Identity is `mediaType:id`. Data is validated on read, capped at 100 items, and degrades gracefully if storage is unavailable.
 
 5. **Infinite scroll rails** — Each rail uses `useInfiniteQuery` with scroll-to-end detection, loading 20 items per page until no more data is available.
+
+6. **Dual-mode search pagination** — Search results support both numbered pagination (`useQuery` with page parameter) and infinite scroll (`useInfiniteQuery`), switchable via a toggle. User preference persists to `localStorage` and page state syncs with URL.
 
 ## 🎬 TMDB API Endpoints
 
@@ -180,6 +185,8 @@ cinemaz/
 - Watchlist toggle uses `aria-pressed` for toggle state
 - Scroll buttons have `focus-visible:opacity-100` for keyboard visibility
 - Respects `prefers-reduced-motion` media query
+- Pagination uses `aria-label="Pagination"` and `aria-current="page"` on active page
+- Search mode toggle uses `role="radiogroup"` with `aria-checked`
 
 ### Keyboard Navigation
 
@@ -189,6 +196,8 @@ cinemaz/
 4. Rail prev/next buttons are keyboard accessible (visible on focus)
 5. Card links are navigable via Tab
 6. Watchlist toggle is a native `<button>` with `aria-pressed`
+7. Pagination buttons are keyboard accessible with focus ring
+8. Search mode toggle uses arrow keys via `role="radiogroup"`
 
 ## 📱 Responsive Design
 
@@ -201,6 +210,7 @@ cinemaz/
 - No horizontal page overflow at any width
 - Rails scroll horizontally within their region
 - 44×44px minimum touch target for icon controls
+- Pagination labels hidden on mobile (`hidden sm:inline`)
 
 ## 🎨 Design Tokens
 
@@ -224,7 +234,7 @@ cinemaz/
 | `storage.test.ts` | 26 | localStorage CRUD, dedupe, cap 100, corrupted data, unavailable storage |
 | `MediaCard.test.ts` | 21 | Rendering, poster/fallback, links, watchlist toggle, accessibility |
 | `MediaRail.test.ts` | 17 | Loading skeletons, error+retry, empty, scroll buttons, semantics |
-| `client.integration.test.ts` | 14 | All TMDB endpoints, search, detail 404, partial failure isolation (MSW) |
+| `client.integration.test.ts` | 14 | All TMDB endpoints, search with pagination, detail 404, partial failure isolation (MSW) |
 
 ## 🚢 Deployment
 
@@ -249,6 +259,8 @@ cinemaz/
 - [x] All 9 rails load independently with error isolation
 - [x] Hero, cards, skeleton states visually verified
 - [x] Keyboard navigation verified
+- [x] Search pagination (paged + infinite scroll) works
+- [x] Pagination mode toggle persists to localStorage
 - [x] All UI text in English
 
 ## 📄 License
@@ -256,5 +268,7 @@ cinemaz/
 This project is for educational and assessment purposes.
 
 ---
+
+Repository: [github.com/wicaksana94/cinemaz](https://github.com/wicaksana94/cinemaz)
 
 Built with ❤️ using Vue 3, Vite, and TMDB API
