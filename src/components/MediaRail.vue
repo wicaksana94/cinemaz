@@ -25,8 +25,11 @@
         aria-hidden="true"
       >
         <div class="aspect-[2/3] animate-pulse rounded-[var(--radius-card)] bg-[var(--color-bg-elevated)]" />
-        <div class="mt-2 h-3 w-3/4 animate-pulse rounded bg-[var(--color-bg-elevated)]" />
-        <div class="mt-1 h-2 w-1/2 animate-pulse rounded bg-[var(--color-bg-elevated)]" />
+        <!-- Match MediaCard's fixed h-[88px] info section to prevent CLS -->
+        <div class="flex h-[88px] flex-col gap-1 p-3">
+          <div class="h-3 w-3/4 animate-pulse rounded bg-[var(--color-bg-elevated)]" />
+          <div class="h-2 w-1/2 animate-pulse rounded bg-[var(--color-bg-elevated)]" />
+        </div>
       </div>
       <span class="sr-only">Loading {{ title }}...</span>
     </div>
