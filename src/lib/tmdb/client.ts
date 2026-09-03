@@ -84,9 +84,9 @@ export async function fetchPopularPeople(params: TmdbListParams = {}) {
   return fetchGateway('3/person/popular', { page: params.page ?? 1 })
 }
 
-export async function searchMulti(query: string) {
+export async function searchMulti(query: string, page = 1) {
   const trimmed = query.trim().slice(0, 100)
-  return fetchGateway('3/search/multi', { query: trimmed, include_adult: false, page: 1 })
+  return fetchGateway('3/search/multi', { query: trimmed, include_adult: false, page })
 }
 
 export async function fetchMovieDetail(id: number) {
@@ -201,13 +201,27 @@ export const tmdbQueries = {
     }),
   popularPeopleInfinite: () => createInfiniteListOptions('popular-people', fetchPopularPeople),
 
-  search: (query: string) =>
+  search: (query: string, page: number = 1) =>
     queryOptions({
-      queryKey: tmdbKeys.search(query),
-      queryFn: () => searchMulti(query),
+      queryKey: [...tmdbKeys.search(query), 'paged', page],
+      queryFn: () => searchMulti(query, page),
       staleTime: FIVE_MINUTES,
       enabled: query.trim().length >= 2,
     }),
+
+  searchInfinite: (query: string) =>
+    infiniteQueryOptions({
+      queryKey: [...tmdbKeys.search(query), 'infinite'],
+      queryFn: ({ pageParam }) => searchMulti(query, pageParam) as Promise<TmdbListResponse>,
+      initialPageParam: 1 as number,
+      getNextPageParam: (lastPage: TmdbListResponse, allPages: TmdbListResponse[]) => {
+        if (lastPage.total_pages && allPages.length >= lastPage.total_pages) return undefined
+        return allPages.length + 1
+      },
+      staleTime: FIVE_MINUTES,
+      enabled: query.trim().length >= 2,
+    }),
+
 
   movieDetail: (id: number) =>
     queryOptions({

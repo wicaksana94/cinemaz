@@ -3,6 +3,7 @@ import {
   tmdbMovieListResponse,
   tmdbTvListResponse,
   tmdbSearchResponse,
+  tmdbSearchPage2Response,
   tmdbMovieDetailResponse,
   tmdbTvDetailResponse,
 } from './fixtures'
@@ -63,6 +64,7 @@ export const handlers = [
   http.get(`${GW}/3/search/multi`, ({ request }) => {
     const url = new URL(request.url)
     const query = url.searchParams.get('query') || ''
+    const page = Number(url.searchParams.get('page')) || 1
 
     if (query.toLowerCase().includes('error')) {
       return HttpResponse.json(
@@ -80,17 +82,20 @@ export const handlers = [
       })
     }
 
-    const filtered = tmdbSearchResponse.results.filter((r) => {
+    // Return different data based on page number for multi-page testing
+    const responseData = page === 2 ? tmdbSearchPage2Response : tmdbSearchResponse
+
+    const filtered = responseData.results.filter((r) => {
       if (r.media_type === 'person') return false
       const title = ('title' in r ? r.title : null) ?? ('name' in r ? r.name : null) ?? ''
       return title.toLowerCase().includes(query.toLowerCase())
     })
 
     return HttpResponse.json({
-      page: 1,
-      results: filtered.length > 0 ? filtered : tmdbSearchResponse.results,
-      total_pages: 1,
-      total_results: filtered.length > 0 ? filtered.length : tmdbSearchResponse.results.length,
+      page,
+      results: filtered.length > 0 ? filtered : responseData.results,
+      total_pages: responseData.total_pages,
+      total_results: filtered.length > 0 ? filtered.length : responseData.total_results,
     })
   }),
 ]

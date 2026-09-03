@@ -111,8 +111,38 @@ export const tmdbSearchResponse = {
       media_type: 'person',
     },
   ],
-  total_pages: 1,
-  total_results: 3,
+  total_pages: 3,
+  total_results: 20,
+}
+
+export const tmdbSearchPage2Response = {
+  page: 2,
+  results: [
+    {
+      id: 27205,
+      title: 'Inception',
+      original_title: 'Inception',
+      overview: 'A thief who steals corporate secrets through dream-sharing technology...',
+      poster_path: '/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg',
+      backdrop_path: null,
+      vote_average: 8.8,
+      release_date: '2010-07-16',
+      media_type: 'movie',
+    },
+    {
+      id: 1396,
+      name: 'Breaking Bad',
+      original_name: 'Breaking Bad',
+      overview: 'A high school chemistry teacher turned meth producer...',
+      poster_path: '/ggFHVNu6YYI5L9pCfOacjizRGt.jpg',
+      backdrop_path: null,
+      vote_average: 9.5,
+      first_air_date: '2008-01-20',
+      media_type: 'tv',
+    },
+  ],
+  total_pages: 3,
+  total_results: 20,
 }
 
 export const tmdbMovieDetailResponse = {
