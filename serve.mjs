@@ -78,19 +78,29 @@ function isApiKey(token) {
   return /^[a-f0-9]{32}$/i.test(token)
 }
 
+const CSP = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https://image.tmdb.org https://fonts.googleapis.com data:; font-src 'self' https://fonts.gstatic.com; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'"
+
 function serveFile(res, filePath) {
   fs.readFile(filePath, (err, data) => {
     if (err) {
       // SPA fallback
       fs.readFile(path.join(DIST, 'index.html'), (err2, html) => {
         if (err2) { res.writeHead(404); res.end('Not found'); return }
-        res.writeHead(200, { 'Content-Type': 'text/html' })
+        res.writeHead(200, {
+          'Content-Type': 'text/html',
+          'Content-Security-Policy': CSP,
+          'X-Frame-Options': 'DENY',
+          'X-Content-Type-Options': 'nosniff',
+        })
         res.end(html)
       })
       return
     }
     const ext = path.extname(filePath)
-    res.writeHead(200, { 'Content-Type': MIME[ext] || 'application/octet-stream' })
+    res.writeHead(200, {
+      'Content-Type': MIME[ext] || 'application/octet-stream',
+      'Content-Security-Policy': CSP,
+    })
     res.end(data)
   })
 }
