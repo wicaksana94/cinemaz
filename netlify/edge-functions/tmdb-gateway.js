@@ -19,6 +19,10 @@ const ALLOWED = [
 
 const PARAMS = new Set(["language", "region", "page", "query", "include_adult"]);
 
+function isApiKey(token) {
+  return /^[a-f0-9]{32}$/i.test(token);
+}
+
 export default async (request, context) => {
   const url = new URL(request.url);
   const apiPath = url.pathname.replace("/api/tmdb", "");
@@ -54,16 +58,19 @@ export default async (request, context) => {
     }
   }
 
+  if (isApiKey(token)) {
+    params.set("api_key", token);
+  }
+
   const upstream = `${TMDB_BASE}${apiPath}?${params.toString()}`;
 
-  try {
-    const resp = await fetch(upstream, {
-      headers: {
-        Accept: "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
+  const headers = { Accept: "application/json" };
+  if (!isApiKey(token)) {
+    headers.Authorization = `Bearer ${token}`;
+  }
 
+  try {
+    const resp = await fetch(upstream, { headers });
     const data = await resp.json();
 
     return new Response(JSON.stringify(data), {
