@@ -16,7 +16,7 @@ cinemaZ is a Vue 3 web application for browsing movies and TV shows using data f
 | Validation | Zod |
 | Linting | oxLint |
 | Testing | Vitest |
-| Hosting | Vercel (SPA + serverless gateway) |
+| Hosting | Netlify (SPA + Edge Function gateway) |
 
 ## 📋 Prerequisites
 
@@ -68,7 +68,7 @@ node serve.mjs
 ## 🔐 Environment Variables
 
 ```dotenv
-# Server only — set in Vercel, never prefix with VITE_
+# Server only — set in Netlify dashboard, never prefix with VITE_
 TMDB_ACCESS_TOKEN=    # Your TMDB API v3 bearer token
 TMDB_BASE_URL=https://api.themoviedb.org
 
@@ -85,7 +85,8 @@ VITE_TMDB_REGION=ID
 cinemaz/
 ├── api/
 │   └── tmdb/
-│       └── index.py          # Vercel serverless TMDB gateway
+│   └── edge-functions/
+│       └── tmdb-gateway.js   # Netlify Edge Function TMDB gateway
 ├── public/
 │   ├── favicon.svg           # cinemaZ branded favicon
 │   ├── placeholder-movie.svg # Movie poster placeholder
@@ -124,7 +125,7 @@ cinemaz/
 │   └── router/
 │       └── index.ts          # Vue Router configuration
 ├── serve.mjs                 # Local production server with gateway
-├── vercel.json               # Vercel routing + SPA fallback
+├── netlify.toml               # Netlify build + redirect config
 └── vite.config.ts            # Vite config with Tailwind + gateway
 ```
 
@@ -227,9 +228,9 @@ cinemaz/
 
 ## 🚢 Deployment
 
-### Vercel Setup
+### Netlify Setup
 
-1. Connect repository to Vercel
+1. Connect repository to Netlify
 2. Set environment variables:
    - `TMDB_ACCESS_TOKEN` (Production + Preview, **server-only**)
    - `TMDB_BASE_URL` = `https://api.themoviedb.org`

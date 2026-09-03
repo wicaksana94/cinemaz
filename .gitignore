@@ -31,3 +31,10 @@ coverage
 
 # Build artifacts
 tsconfig.*.tsbuildinfo
+.env*
+
+# Vercel (deprecated)
+.vercel
+
+# Netlify
+.netlify
